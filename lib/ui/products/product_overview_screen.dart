@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'products_gird.dart';
+import '../shared/app_drawer.dart';
 
 enum FilterOptions { favorites, all }
 
@@ -23,9 +24,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           buildShoppingCartIcon(),
         ],
       ),
+      drawer: const AppDrawer(),
       body: ProductsGrid(_showOnlyFavorites),
     );
   }
+  
   Widget buildShoppingCartIcon() {
     return IconButton(
       icon: const Icon(

@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 class Product {
   final String? id;
   final String title;
   final String description;
   final double price;
   final String imageUrl;
-  final bool isFavortie;
+  final ValueNotifier<bool> _isFavorite;
+
 
   Product({
     this.id,
@@ -12,8 +14,20 @@ class Product {
     required this.description,
     required this.price,
     required this.imageUrl,
-    this.isFavortie = false,
-  });
+    isFavortie = false,
+  }) : _isFavorite = ValueNotifier(isFavortie);
+
+  set isFavorite(bool newValue) {
+    _isFavorite.value = newValue;
+  }
+
+  bool get isFavorite {
+    return _isFavorite.value;
+  }
+
+  ValueNotifier<bool> get isFavorriteListenable {
+    return _isFavorite;
+  }
   Product copyWith({
     String? id,
     String? title,
@@ -28,7 +42,7 @@ class Product {
       description: description ?? this.description,
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
-      isFavortie: isFavortie ?? this.isFavortie,
+      //isFavortie: isFavortie ?? this.isFavortie,
     );
   }
 }

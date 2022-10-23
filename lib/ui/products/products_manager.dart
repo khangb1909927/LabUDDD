@@ -47,7 +47,7 @@ class ProductsManager {
   }
 
   List<Product> get favoriteItems {
-    return _items.where((prodItem) => prodItem.isFavortie).toList();
+    return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
   Product findById(String id) {

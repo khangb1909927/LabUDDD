@@ -13,6 +13,10 @@ class CartManager with ChangeNotifier{
     ),
   };
 
+  List<CartItem> get products {
+    return _items.values.toList();
+  }
+
   int get productCount {
     return _items.length;
   }

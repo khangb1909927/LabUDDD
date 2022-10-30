@@ -46,12 +46,14 @@ class UserProductsScreen extends StatelessWidget {
   }
 
 
-  Widget buildAddButton() {
-    return IconButton(
-        icon: const Icon(Icons.add),
-        onPressed: () {
-          print('Go to edit product screen');
-        }
+ Widget buildAddButton(BuildContext context) {
+  return IconButton(
+    icon: const Icon(Icons.add),
+    onPressed: () {
+      Navigator.of(context).pushNamed(
+        EditProductScreen.routeName,
       );
-  }
+    },
+  );
+}
 }

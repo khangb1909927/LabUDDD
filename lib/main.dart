@@ -6,7 +6,11 @@ import 'ui/cart/cart_screen.dart';
 import 'ui/orders/orders_screen.dart';
 import 'ui/screens.dart';
 import 'package:provider/provider.dart';
-void main() {
+import 'package:flutter_dotenv/flutter_dotenv.dart'
+
+
+Future<void> main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -18,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => AuthManager()),
         ChangeNotifierProvider(
           create: (ctx) => ProductsManager(),
         ),
@@ -25,7 +30,9 @@ class MyApp extends StatelessWidget {
           create: (ctx) => CartManager(),
         ),
       ],
-child: MaterialApp(
+      child: Consumer<AuthManager>(
+        builder: (ctx, authManager, child) {
+        return MaterialApp(
       title: 'My shop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -36,19 +43,30 @@ child: MaterialApp(
           secondary: Colors.deepOrange,
         ),
       ),
-      home: const ProductsOverviewScreen(),
+      home: authManager.isAuth
+              ? const ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: authManager.tryAutoLogin(),
+                  builder: (ctx, snapshot) {
+                    return snapshot.connectionState == ConnectionState.waiting
+                        ? const SplashScreen()
+                        : const AuthScreen();
+                  },
+                ),
       routes: {
         CartScreen.routeName: (ctx) => const CartScreen(),
         OrdersScreen.routeName: (ctx) => const OrdersScreen(),
         UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
       },
       onGenerateRoute: (settings) {
-        if (settings.name == ProductDetailScreen.routeName) {
+        if (settings.name == EditProductScreen.routeName) {
           final productId = settings.arguments as String;
           return MaterialPageRoute(
             builder: (ctx) {
-              return ProductDetailScreen(
-                ctx. read<ProductsManager>().findById(productId),
+              return EditProductScreen(
+                productId != null
+                ? ctx.read<ProductsManager>().findById(productId)
+                : null,
               );
             },
           );

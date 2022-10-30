@@ -6,7 +6,7 @@ import 'ui/cart/cart_screen.dart';
 import 'ui/orders/orders_screen.dart';
 import 'ui/screens.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 Future<void> main() async {
@@ -23,8 +23,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthManager()),
-        ChangeNotifierProvider(
+       ChangeNotifierProxyProvider<AuthManager, ProductsManager>(
           create: (ctx) => ProductsManager(),
+          update: (ctx, authManager, productsManager) {
+            // Khi authManager có báo hiệu thay đổi thì đọc lại authToken
+            // cho productManager
+            productsManager!.authToken = authManager.authToken;
+            return productsManager;
+          },
         ),
         ChangeNotifierProvider(
           create: (ctx) => CartManager(),
@@ -73,8 +79,8 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
-    ),
+        );
+      }),
     );
   }
 }
-

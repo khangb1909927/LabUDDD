@@ -45,4 +45,22 @@ class Product {
       //isFavortie: isFavortie ?? this.isFavortie,
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  static Product fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      price: json['price'],
+      imageUrl: json['imageUrl'],
+    );
+  }
 }
